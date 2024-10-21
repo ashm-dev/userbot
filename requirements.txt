@@ -1,0 +1,3 @@
+telethon
+jsonlines
+python-dotenv
