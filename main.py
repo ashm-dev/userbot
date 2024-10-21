@@ -1,3 +1,4 @@
+import logging
 from tempfile import NamedTemporaryFile
 
 import jsonlines
@@ -7,6 +8,7 @@ from telethon.events import NewMessage
 from settings import Settings
 
 
+logging.basicConfig(level=logging.DEBUG)
 settings = Settings.from_env()
 client = TelegramClient(settings.APP_NAME, api_id=settings.API_ID, api_hash=settings.API_HASH)
 
