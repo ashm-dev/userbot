@@ -27,6 +27,8 @@ def deep_datetime_to_str(obj):
         return tuple(deep_datetime_to_str(elem) for elem in obj)
     elif isinstance(obj, datetime):
         return obj.strftime("%Y-%m-%d %H:%M:%S")
+    elif isinstance(obj, bytes):
+        return base64.b64encode(obj).decode('utf-8')
     else:
         return obj
 
