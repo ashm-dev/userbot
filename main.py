@@ -8,13 +8,21 @@ from telethon.events import NewMessage
 from settings import Settings
 
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(
+    format="%(levelname)s [%(asctime)s] %(name)s - %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+    level=logging.DEBUG
+)
+
 settings = Settings.from_env()
 client = TelegramClient(settings.APP_NAME, api_id=settings.API_ID, api_hash=settings.API_HASH)
 
 
 @client.on(events.NewMessage(pattern='/history'))
-async def history(event: NewMessage.Event) -> None:    
+async def history(event: NewMessage.Event) -> None:
+    logging.info('new event')
+    logging.info(event)   
+     
     await event.reply('Получаю историю твоего канала')
     
     res = []
@@ -43,5 +51,6 @@ async def history(event: NewMessage.Event) -> None:
 
 
 if __name__ == '__main__':
+    logging.info('Бот запущен')
     client.start()
     client.run_until_disconnected()
