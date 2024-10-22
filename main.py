@@ -11,7 +11,7 @@ from settings import Settings
 logging.basicConfig(
     format="%(levelname)s [%(asctime)s] %(name)s - %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S",
-    level=logging.DEBUG
+    level=logging.INFO
 )
 
 settings = Settings.from_env()
@@ -29,19 +29,20 @@ async def history(event: NewMessage.Event) -> None:
     channel = await client.get_entity('mlecchnii')
     
     async for message in client.iter_messages(channel.id):
-        data = {
-            'id': message.id,
-            'date': message.date.strftime('%d.%m.%Y %H:%M:%S'),
-            'message': message.message if message.message else 'Здесь нет сообщения, а есть только медиагруппа (фото/видео/голосовое/и тд)',
-            'views': message.views,
-        }
-        if message.reactions:
-            reactions = {}
-            for i in message.reactions.results:
-                reactions[i.reaction.emoticon] =  i.count
-            data['reactions'] = reactions
+        res.append(message.to_dict())
+        # data = {
+        #     'id': message.id,
+        #     'date': message.date.strftime('%d.%m.%Y %H:%M:%S'),
+        #     'message': message.message if message.message else 'Здесь нет сообщения, а есть только медиагруппа (фото/видео/голосовое/и тд)',
+        #     'views': message.views,
+        # }
+        # if message.reactions:
+        #     reactions = {}
+        #     for i in message.reactions.results:
+        #         reactions[i.reaction.emoticon] =  i.count
+        #     data['reactions'] = reactions
         
-        res.append(data)
+        # res.append(data)
     
     with NamedTemporaryFile(suffix='.jsonl') as f:
         with jsonlines.open(f.name, mode='w') as writer:
