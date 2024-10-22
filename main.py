@@ -1,3 +1,4 @@
+import base64
 import logging
 from datetime import datetime
 from tempfile import NamedTemporaryFile
