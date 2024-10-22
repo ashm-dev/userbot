@@ -17,6 +17,17 @@ logging.basicConfig(
 settings = Settings.from_env()
 client = TelegramClient(settings.APP_NAME, api_id=settings.API_ID, api_hash=settings.API_HASH)
 
+def deep_datetime_to_str(obj):
+    if isinstance(obj, dict):
+        return {k: deep_datetime_to_str(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [deep_datetime_to_str(elem) for elem in obj]
+    elif isinstance(obj, tuple):
+        return tuple(deep_datetime_to_str(elem) for elem in obj)
+    elif isinstance(obj, datetime):
+        return obj.strftime("%Y-%m-%d %H:%M:%S")
+    else:
+        return obj
 
 @client.on(events.NewMessage(pattern='/history'))
 async def history(event: NewMessage.Event) -> None:
@@ -29,7 +40,7 @@ async def history(event: NewMessage.Event) -> None:
     channel = await client.get_entity('mlecchnii')
     
     async for message in client.iter_messages(channel.id):
-        res.append(message.to_dict())
+        res.append(deep_datetime_to_str(message.to_dict()))
         # data = {
         #     'id': message.id,
         #     'date': message.date.strftime('%d.%m.%Y %H:%M:%S'),
