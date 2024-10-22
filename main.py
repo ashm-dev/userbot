@@ -45,14 +45,16 @@ async def history(event: NewMessage.Event) -> None:
             'id': message.id,
             'date': message.date.strftime('%d.%m.%Y %H:%M:%S'),
             'message': message.message if message.message else 'Здесь нет сообщения, а есть только медиагруппа (фото/видео/голосовое/и тд)',
-            'views': message.views,
-            'media': deep_datetime_to_str(message.media.to_dict())
+            'views': message.views
         }
         if message.reactions:
             reactions = {}
             for i in message.reactions.results:
                 reactions[i.reaction.emoticon] =  i.count
             data['reactions'] = reactions
+
+        if message.media:
+            data['media'] = deep_datetime_to_str(message.media.to_dict())
         
         res.append(data)
     
